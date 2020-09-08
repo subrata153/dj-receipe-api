@@ -6,12 +6,22 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         """Create and save a new user details"""
-        user = self.model(email=email, **extra_fields)
+        if not email:
+            raise ValueError('User must have an email addess')
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
+    def create_superuser(self, email, password):
+        """Create superuser and save the user detials"""
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+
+        return user    
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email insted of username"""
@@ -23,3 +33,5 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
