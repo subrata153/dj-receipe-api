@@ -1,7 +1,18 @@
+import uuid
+import os
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from django.conf import settings
+
+
+def recipe_image_file_path(instance, filename):
+    """generate file path for recipe images"""
+    ext = filename.split('.')[-1] #Split file name by . to get the extension
+    filename = f'{uuid.uuid4()}.{ext}'  #Generate unique file name
+
+    return os.path.join('uploads/recipe/', filename)  #Build and return the file path
+
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -69,12 +80,13 @@ class Recipe(models.Model):
         on_delete=models.CASCADE
     )
     title = models.CharField(max_length=255)
-    time_minutes = models.IntegerField
+    time_minutes = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     link = models.CharField(max_length=255, blank=True)
     """ManyToManyField allow us to select multiple value form another models"""
     ingredients = models.ManyToManyField('Ingredient')
     tags = models.ManyToManyField('Tag')
+    image = models.ImageField(null=True, upload_to=recipe_image_file_path)  #pass the genetared image path function reference
 
     def __str__(self):
         return self.title
