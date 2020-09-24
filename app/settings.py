@@ -25,7 +25,10 @@ SECRET_KEY = 'ly0sz4!s_-zf887%z$o4q9jx5ub)oq6+fy#0@l4n$9+m(-dwb6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dbcf9357d938.ngrok.io',
+                '127.0.0.1'
+                ]
+
 
 
 # Application definition
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     'core',
     'user',
     'recipe',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
